@@ -45,13 +45,11 @@ The output file will contain a table with one row per genomic window, including:
 
 For each window of size `W` bases (e.g., `W = 100`), and for each position `j` within that window, we compute the probability of observing each nucleotide:
 
-\[
-P_j(b) = \frac{c_j(b) + \alpha}{\sum_{x \in \{A,C,G,T\}} (c_j(x) + \alpha)}
-\]
+![P_j(b)](https://latex.codecogs.com/png.latex?P_j(b)=\frac{c_j(b)+\alpha}{\sum_{x\in\{A,C,G,T\}}(c_j(x)+\alpha)})
 
 Where:  
-- \(c_j(b)\) = number of sequences with base \(b\) at position \(j\).  
-- \(\alpha\) = pseudocount (Laplace smoothing, default \(\alpha = 1\)) to avoid zero probabilities.  
+- ![c_j(b)](https://latex.codecogs.com/png.latex?c_j(b)) = number of sequences with base ![b](https://latex.codecogs.com/png.latex?b) at position ![j](https://latex.codecogs.com/png.latex?j).  
+- ![\alpha](https://latex.codecogs.com/png.latex?\alpha) = pseudocount (Laplace smoothing, default ![\alpha=1](https://latex.codecogs.com/png.latex?\alpha=1)) to avoid zero probabilities.  
 - Bases `N` are ignored in the counts.  
 
 This gives a **per-position categorical distribution**.
@@ -60,25 +58,20 @@ This gives a **per-position categorical distribution**.
 
 ### 2. Log-likelihood of a sequence in a window
 
-Given a query sequence \(Q\), we compute its probability under the window profile.  
-For each valid (non-`N`) position \(j\) with observed base \(q_j\):
+Given a query sequence ![Q](https://latex.codecogs.com/png.latex?Q), we compute its probability under the window profile.  
+For each valid (non-`N`) position ![j](https://latex.codecogs.com/png.latex?j) with observed base ![q_j](https://latex.codecogs.com/png.latex?q_j):
 
-\[
-\log L(Q \mid \text{window}) = \sum_{j=1}^{W} \log P_j(q_j)
-\]
+![logL](https://latex.codecogs.com/png.latex?\log%20L(Q\mid%20\text{window})=\sum_{j=1}^{W}\log%20P_j(q_j))
 
 The **normalized negative log-likelihood (nLL)** is:
 
-\[
-\text{nLL}(Q) = -\frac{1}{N_{\text{valid}}} \sum_{j=1}^{W} \log P_j(q_j)
-\]
+![nLL](https://latex.codecogs.com/png.latex?\text{nLL}(Q)=-\frac{1}{N_{\text{valid}}}\sum_{j=1}^{W}\log%20P_j(q_j))
 
 Where:  
-- \(N_{\text{valid}}\) = number of positions in the window where \(Q\) has a non-`N` base.  
+- ![N_valid](https://latex.codecogs.com/png.latex?N_{\text{valid}}) = number of positions in the window where ![Q](https://latex.codecogs.com/png.latex?Q) has a non-`N` base.  
 
 Smaller nLL values indicate sequences more likely under the empirical profile.
 
----
 
 ### 3. Empirical priors
 
