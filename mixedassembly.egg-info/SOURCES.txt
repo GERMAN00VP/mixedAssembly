@@ -1,0 +1,16 @@
+LICENSE
+README.md
+pyproject.toml
+setup.cfg
+mixedAssembly/__init__.py
+mixedAssembly/build_priors.py
+mixedAssembly/cli.py
+mixedAssembly/remove_frameshifts.py
+mixedAssembly/run_mixed_assembly.py
+mixedAssembly/utils.py
+mixedAssembly/utils_mixed_assembly.py
+mixedassembly.egg-info/PKG-INFO
+mixedassembly.egg-info/SOURCES.txt
+mixedassembly.egg-info/dependency_links.txt
+mixedassembly.egg-info/requires.txt
+mixedassembly.egg-info/top_level.txt
