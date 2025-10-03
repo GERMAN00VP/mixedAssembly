@@ -4,7 +4,29 @@ This repository provides tools to:
 
 1. **Run a mixed assembly pipeline (`run_mixed_assembly.py`)** that merges IRMA and ABACAS information, applies quality control at the sliding-window level, and restores IRMA-specific insertions relative to the reference.  
 2. **Build empirical priors (`build_priors.py`)** from large multiple-sequence alignments, used later to evaluate windows during mixed assembly.  
-3. Provide supporting functions via **utils** scripts.
+3. **Remove frameshifts from an alignment with the reference (`remove_frameshifts.py`)**
+4. **Provide supporting functions** via **utils** scripts.
+
+---
+### Installation
+
+```bash
+pip install mixedassembly
+```
+---
+
+### CLI usage 
+```bash
+# Create priors
+mixedassembly build-priors --input sequences.fasta --ref REF_ID --output priors.parquet
+
+# Run mixed assembly
+mixedassembly run-mixed-assembly --input alignment.aln --ref REF_ID --prior priors.parquet --output_dir results
+
+# Correct frameshifts
+mixedassembly remove-frameshifts --aln consensus.aln --out corrected.fasta
+
+```
 
 ---
 

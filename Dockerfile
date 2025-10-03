@@ -1,16 +1,21 @@
+# Imagen base ligera con Python
 FROM python:3.10-slim
 
-LABEL maintainer="Germán Vallejo Palma <german.vallejo@isciii.es>"
+# Evita la creación de .pyc y buffer en stdout/stderr
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
-WORKDIR /opt/app
-
-# Install system deps if needed (e.g., libxml2 for Biopython depending on features)
+# Instala dependencias del sistema (ej: compresión, parquet, etc.)
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
+        build-essential \
+        libz-dev \
+        && rm -rf /var/lib/apt/lists/*
 
-# Copy package and install in editable mode (or pip install from PyPI)
-COPY . /opt/app
-RUN pip install --no-cache-dir .
+# Instala tu paquete desde PyPI (reemplaza con la versión que publiques)
+RUN pip install --no-cache-dir mixedassembly==0.1.3
 
-ENTRYPOINT ["/bin/bash", "-lc"]
+# Establece el comando por defecto (CLI principal)
+ENTRYPOINT ["mixedassembly"]
+
+# Si alguien quiere ver ayuda por defecto
+CMD ["--help"]

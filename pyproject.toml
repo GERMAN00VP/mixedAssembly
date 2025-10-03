@@ -4,12 +4,12 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mixedassembly"
-version = "0.1.0"
+version = "0.1.3"
 description = "Tools for consensus sequence assembly and frameshift correction (mixedAssembly)"
 readme = "README.md"
-license = {file = "LICENSE"}
+license = { file = "LICENSE" }
 authors = [
-  {name = "Germán Vallejo Palma", email = "german.vallejo@isciii.es"}
+  { name = "Germán Vallejo Palma", email = "german.vallejo@isciii.es" }
 ]
 requires-python = ">=3.8"
 dependencies = [
@@ -17,6 +17,9 @@ dependencies = [
   "numpy>=1.21",
   "pandas>=1.3"
 ]
+
+[project.scripts]
+mixedassembly = "mixedassembly.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/GERMAN00VP/mixedAssembly"

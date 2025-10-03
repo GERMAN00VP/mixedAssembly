@@ -1,0 +1,10 @@
+# environment.yml
+name: mixedassembly
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python >=3.8,<3.12
+  - pip
+  - pip:
+      - mixedassembly>=0.1.1
