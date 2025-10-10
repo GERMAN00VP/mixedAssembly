@@ -15,10 +15,9 @@ def main(argv: List[str] = None) -> int:
     parser.add_argument("-o", "--output", required=True, help="Output file (.parquet)")
     parser.add_argument("--win", type=int, default=100, help="Window size (default=100)")
     parser.add_argument("--overlap", type=int, default=10, help="Window overlap (default=10)")
-    args = parser.parse_args()
-
     argv = argv if argv is not None else sys.argv[1:]
-
+    args = parser.parse_args(argv)
+    
     # Load alignment
     ids, seqs = load_alignment(args.input)
 

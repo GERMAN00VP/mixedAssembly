@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: mixedassembly
-Version: 0.1.3
+Version: 0.1.4
 Summary: Tools for consensus sequence assembly and frameshift correction (mixedAssembly)
 Home-page: https://github.com/yourusername/mixedAssembly
 Author: Germán Vallejo Palma
@@ -42,6 +42,7 @@ License-File: LICENSE
 Requires-Dist: biopython>=1.79
 Requires-Dist: numpy>=1.21
 Requires-Dist: pandas>=1.3
+Requires-Dist: pyarrow>=12.0
 Dynamic: license-file
 
 # Viral Mixed Assembly Pipeline

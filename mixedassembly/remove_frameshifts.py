@@ -70,8 +70,8 @@ def main(argv: List[str] = None) -> int:
     ap.add_argument("--min-gap", type=int, default=15, help="Minimum gap length to mask aggressively (default 15)")
     ap.add_argument("--pad", type=int, default=0, help="Extra padding of Ns around the gap (default 0)")
     ap.add_argument("--out", required=True, help="Output FASTA")
-    args = ap.parse_args(argv)
     argv = argv if argv is not None else sys.argv[1:]
+    args = ap.parse_args(argv)
     run(args.aln, args.ref_index, args.cons_index, args.min_gap, args.pad, args.out)
     return 0
 

@@ -45,22 +45,23 @@ ch.setFormatter(um_logger.handlers[0].formatter)
 logger.addHandler(ch)
 
 
-def parse_args():
-    p = argparse.ArgumentParser(description="Run Mixed Assembly pipeline (IRMA + ABACAS mix)")
+def parse_args(argv=None):
+    p = argparse.ArgumentParser(...)
     p.add_argument("--input", required=True, type=Path, help="Path to input alignment file (.aln)")
     p.add_argument("--ref", required=True, type=str, help="Reference sequence ID present in the alignment file")
     p.add_argument("--prior", required=True, type=Path, help="Path to prior parquet file")
     p.add_argument("--output_dir", required=True, type=Path, help="Output directory to write results")
-    return p.parse_args()
+    return p.parse_args(argv)
+
 
 
 def main(argv: list[str] = None) -> int:
-    args = parse_args()
+    argv = argv if argv is not None else sys.argv[1:]
+    args = parse_args(argv)
     input_path: Path = args.input
     ref_id: str = args.ref
     prior_path: Path = args.prior
     output_dir: Path = args.output_dir
-    argv = argv if argv is not None else sys.argv[1:]
     
     try:
         # Basic validations
@@ -137,7 +138,7 @@ def main(argv: list[str] = None) -> int:
 
         # Perform QC and write qc.json
         qc_path = output_dir / "qc.json"
-        qc_process(filtered_seqs=filtered_seqs, mixed_seq=cons, insertions=insertions, write=str(qc_path))
+        qc_process(filtered_seqs=filtered_seqs, mixed_seq=cons, insertions=insertions, write=str(qc_path),ref_name=ref_id)
 
         logger.info("QC written to %s", qc_path)
         logger.info("Pipeline finished successfully")

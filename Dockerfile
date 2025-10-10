@@ -1,21 +1,29 @@
-# Imagen base ligera con Python
+# Imagen base ligera con Python 3.10
 FROM python:3.10-slim
 
-# Evita la creación de .pyc y buffer en stdout/stderr
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+LABEL maintainer="German Vallejo <german.vallejo@isciii.es>"
+LABEL description="Docker image for mixedassembly v0.1.4"
+LABEL version="0.1.4"
 
-# Instala dependencias del sistema (ej: compresión, parquet, etc.)
+# Evita .pyc y mejora logs
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PATH="/usr/local/bin:$PATH"
+
+# Instala dependencias del sistema necesarias para parquet y compilación ligera
 RUN apt-get update && apt-get install -y --no-install-recommends \
         build-essential \
         libz-dev \
-        && rm -rf /var/lib/apt/lists/*
+        libbz2-dev \
+        liblzma-dev \
+        ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
-# Instala tu paquete desde PyPI (reemplaza con la versión que publiques)
-RUN pip install --no-cache-dir mixedassembly==0.1.3
+# Instala el paquete desde PyPI
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir mixedassembly==0.1.4
 
-# Establece el comando por defecto (CLI principal)
+# Define el comando por defecto
 ENTRYPOINT ["mixedassembly"]
-
-# Si alguien quiere ver ayuda por defecto
 CMD ["--help"]
+

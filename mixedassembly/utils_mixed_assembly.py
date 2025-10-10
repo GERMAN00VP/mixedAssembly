@@ -120,6 +120,7 @@ def process_insertions(insertions: List[Tuple[int, str]]) -> Tuple[int, int]:
 
 
 def qc_process(filtered_seqs: Dict[str, str],
+               ref_name:str,
                mixed_seq: str,
                insertions: List[Tuple[int, str]],
                write: Any = False) -> Dict[str, Any]:
@@ -127,7 +128,8 @@ def qc_process(filtered_seqs: Dict[str, str],
     Compute QC metrics for the mixed assembly.
 
     Args:
-        filtered_seqs: dict of filtered sequences (keys expected: "01_irma", "RSV_BD", "ordered_RSV_BD")
+        filtered_seqs: dict of filtered sequences (keys expected: "01_irma", "REF ID", "ordered_REF ID")
+        ref_name: str, reference id.
         mixed_seq: mixed consensus sequence (reference-coordinate, no gaps)
         insertions: list of (ref_pos, insertion_string) that were added to mixed sequence
         write: False or a filename. If filename, QC dict is written as JSON to that path.
@@ -136,8 +138,8 @@ def qc_process(filtered_seqs: Dict[str, str],
         dict with QC metrics (or writes it to a file if write is a path)
     """
     try:
-        if "01_irma" not in filtered_seqs or "RSV_BD" not in filtered_seqs:
-            raise KeyError("filtered_seqs must contain keys '01_irma' and 'RSV_BD'")
+        if "01_irma" not in filtered_seqs or ref_name not in filtered_seqs:
+            raise KeyError(f"filtered_seqs must contain keys '01_irma' and {ref_name}")
 
         if not mixed_seq:
             raise ValueError("mixed_seq is empty or None")
@@ -146,8 +148,8 @@ def qc_process(filtered_seqs: Dict[str, str],
         coverage_inicial = round((len(mixed_seq) - count_missing(filtered_seqs["01_irma"])) / len(mixed_seq) * 100, 3)
         coverage_final = round((len(mixed_seq) - count_missing(mixed_seq)) / len(mixed_seq) * 100, 3)
 
-        mixed_seq_substitutions = count_substitutions(ref=filtered_seqs["RSV_BD"], seq=mixed_seq)
-        irma_substitutions = count_substitutions(filtered_seqs["RSV_BD"], filtered_seqs["01_irma"])
+        mixed_seq_substitutions = count_substitutions(ref=filtered_seqs[ref_name], seq=mixed_seq)
+        irma_substitutions = count_substitutions(filtered_seqs[ref_name], filtered_seqs["01_irma"])
 
         # expected substitutions scaled by coverage change
         exp_substitutions = round((coverage_final * irma_substitutions) / coverage_inicial, 3) if coverage_inicial != 0 else float("nan")
@@ -321,7 +323,7 @@ def create_windows_df(windows: List[Tuple[int, int]],
 
     Args:
         windows: list of (start,end) tuples (reference coordinates)
-        filtered_seqs: dict with keys "01_irma" and "ordered_RSV_BD" (both are reference-coordinate strings)
+        filtered_seqs: dict with keys "01_irma" and "ordered_REF ID" (both are reference-coordinate strings)
         prior_table: DataFrame with prior rows where .profile is an iterable distribution and .nLL_p95 exists
 
     Returns:
@@ -333,7 +335,8 @@ def create_windows_df(windows: List[Tuple[int, int]],
         start, end = window
         # slice sequences for diagnostics
         irma = filtered_seqs["01_irma"][start:end]
-        abacas = filtered_seqs["ordered_RSV_BD"][start:end]
+        abacas_name = str(np.array([id for id in filtered_seqs.keys()])[np.array(["ordered" in id for id in filtered_seqs.keys()])][0])
+        abacas = filtered_seqs[abacas_name][start:end]
         missing_irma = count_missing(irma)
         missing_abacas = count_missing(abacas)
         abacas_fragments = how_fragmented(abacas)
@@ -364,7 +367,7 @@ def create_windows_df(windows: List[Tuple[int, int]],
                     }
 
                     # score_window expects the full sequence and uses window_profile["start"] internally
-                    window_score = score_window(seq=filtered_seqs["ordered_RSV_BD"],
+                    window_score = score_window(seq=filtered_seqs[abacas_name],
                                                 window_profile=window_profile)['nLL']
 
                     window_dict["WINDOW_PRIOR_nLL_p95"] = prior.nLL_p95.values[0]
