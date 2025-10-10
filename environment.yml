@@ -7,4 +7,4 @@ dependencies:
   - python >=3.8,<3.12
   - pip
   - pip:
-      - mixedassembly>=0.1.1
+      - mixedassembly>=0.1.4
